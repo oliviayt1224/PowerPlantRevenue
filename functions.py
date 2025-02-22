@@ -44,7 +44,7 @@ class Simulation:
         simulation_mode = input("Do you want to proceed with the default values? (Yes/No)")
         if simulation_mode == "No":
             variable_number = None
-            while variable_number != "0":
+            while variable_number != 0:
                 message = """Please choose which variables that you want to define: 
                 1.targeted_month
                 2.power_output_per_hour
@@ -79,7 +79,7 @@ class Simulation:
         days_in_month = calendar.monthrange(year, month)[1]  # Get how many days in the month
         day_index_list = day_index_list[:days_in_month-1]
 
-        num_peak_days = sum(day_index_list<5) # peak hours from 6am to 8pm, Mon to Fri, 14 hours in total
+        num_peak_days = sum(1 for x in day_index_list if x < 5) # peak hours from 6am to 8pm, Mon to Fri, 14 hours in total
 
         peak_hours = num_peak_days * 14
         off_peak_hours = days_in_month * 24 - peak_hours
@@ -89,7 +89,7 @@ class Simulation:
     def generate_random_monthly_usage(self,num_customer):
         monthly_usage_list = []
         for x in range(num_customer):
-            monthly_usage_list = monthly_usage_list.append(random.randint(self.monthly_usage_min, self.monthly_usage_max))
+            monthly_usage_list.append(random.randint(self.monthly_usage_min, self.monthly_usage_max))
         return monthly_usage_list
 
     def generate_timestamp(self):
