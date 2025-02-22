@@ -116,7 +116,7 @@ class Simulation:
     def calculate_revenue(self):
         peak_hourly_usage, off_peak_hourly_usage = self.calculate_hourly_usage()
         df = pd.DataFrame(
-            columns=["Timestamp", "Peak/OffPeak", "Power Balance (Hour Start)", "Power Balance (Hour End)",
+            columns=["Timestamp", "Power Balance (Hour Start)", "Power Balance (Hour End)",
                      "Power Usage", "Revenue"])
         df["Timestamp"]=self.generate_timestamp()
 
@@ -126,6 +126,7 @@ class Simulation:
         outstanding_power_need = 0
         time_last_outage = df["Timestamp"][0]
         power_restore_time = df["Timestamp"][0]
+        power_usage = []
 
         for i in range(len(list(df["Timestamp"]))):
             power_outage_prob_new = self.power_outage_likelihood*self.power_outage_likelihood_multiplier*((df["Timestamp"][i] - time_last_outage).seconds/3600+1)
@@ -139,8 +140,10 @@ class Simulation:
 
             if df["Timestamp"][i]<power_restore_time:
                 outstanding_power_need = power_need + outstanding_power_need
+                power_balance_start.append(power_balance_end[-1])
                 power_balance_end.append(power_balance_start[-1])
                 revenue.append(0)
+                power_usage.append(0)
                 continue
 
             else:
@@ -149,10 +152,12 @@ class Simulation:
                     time_last_outage = df["Timestamp"][i]
                     warning_msg = str(df["Timestamp"][i]) + ": Power outage occurs."
                     warnings.warn(warning_msg)
-                    power_restore_time = df["Timestamp"][i] + datetime.timedelta(hours=np.random.choice([1,2,3],1, p=[0.3,0.5,0.2]))
+                    power_restore_time = df["Timestamp"][i] + datetime.timedelta(hours=int(np.random.choice([1,2,3],1, p=[0.3,0.5,0.2])))
                     outstanding_power_need = power_need + outstanding_power_need
+                    power_balance_start.append(power_balance_end[-1])
                     power_balance_end.append(power_balance_start[-1])
                     revenue.append(0)
+                    power_usage.append(0)
                     continue
 
                 else:
@@ -166,10 +171,16 @@ class Simulation:
                         warning_msg = str(df["Timestamp"][i]) + ": Power shortage occurs."
                         warnings.warn(warning_msg)
 
-                    power_balance_end.append(new_power_balance-min(new_power_balance,(power_need+outstanding_power_need)))
-                    revenue.append(min(new_power_balance, (power_need + outstanding_power_need)) * price)
+                    power_usage.append(min(new_power_balance, (power_need + outstanding_power_need)))
+                    power_balance_end.append(new_power_balance-power_usage[-1])
+                    revenue.append(power_usage[-1] * price)
 
                     if i != len(list(df["Timestamp"]))-1:
                         power_balance_start.append(power_balance_end[-1])
+
+        df["Power Balance (Hour Start)"] = power_balance_start
+        df["Power Balance (Hour End)"] = power_balance_end
+        df["Revenue"] = revenue
+        df["Power Usage"] = power_usage
 
         return df
