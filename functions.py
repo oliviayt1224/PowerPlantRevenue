@@ -128,7 +128,7 @@ class Simulation:
         power_restore_time = df["Timestamp"][0]
 
         for i in range(len(list(df["Timestamp"]))):
-            power_outage_prob_new = self.power_outage_likelihood*self.power_outage_likelihood_multiplier*((df["Timestamp"][i] - time_last_outage).hours+1)
+            power_outage_prob_new = self.power_outage_likelihood*self.power_outage_likelihood_multiplier*((df["Timestamp"][i] - time_last_outage).seconds/3600+1)
 
             if self.check_peak_or_off_peak(df["Timestamp"][i]):
                 power_need = (self.num_customer_peak + self.num_customer_off_peak) * peak_hourly_usage
@@ -147,7 +147,7 @@ class Simulation:
                 if random.random()<=power_outage_prob_new:
                     power_outage_prob_new = self.power_outage_likelihood
                     time_last_outage = df["Timestamp"][i]
-                    warning_msg = df["Timestamp"][i] + ": Power outage occurs."
+                    warning_msg = str(df["Timestamp"][i]) + ": Power outage occurs."
                     warnings.warn(warning_msg)
                     power_restore_time = df["Timestamp"][i] + datetime.timedelta(hours=np.random.choice([1,2,3],1, p=[0.3,0.5,0.2]))
                     outstanding_power_need = power_need + outstanding_power_need
@@ -157,13 +157,13 @@ class Simulation:
 
                 else:
                     if df["Timestamp"][i] == power_restore_time:
-                        print(df["Timestamp"][i] + ": Power restored")
+                        print(str(df["Timestamp"][i]) + ": Power restored")
 
                     new_power_balance = power_balance_start[-1]+self.power_output_per_hour
 
                     if new_power_balance < (power_need + outstanding_power_need):
                         outstanding_power_need = outstanding_power_need + power_need - new_power_balance
-                        warning_msg = df["Timestamp"][i] + ": Power shortage occurs."
+                        warning_msg = str(df["Timestamp"][i]) + ": Power shortage occurs."
                         warnings.warn(warning_msg)
 
                     power_balance_end.append(new_power_balance-min(new_power_balance,(power_need+outstanding_power_need)))
