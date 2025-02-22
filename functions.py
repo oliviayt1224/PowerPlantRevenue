@@ -26,22 +26,20 @@ class Simulation:
 
     def intro(self):
         intro = """The simulator calculates the monthly revenue using the basic formula of [Power_Usage x Power_Price_per_unit].
-        Some customers spend more during peak hours while others are more interested in off peak hours, and the prices per unit are different between peak and offpeak.
-        The program assumes that the power production, the price, the number of customers would not change over the month.
-        And the ratio of Peak Usage/Total Usage is known and the same among the group of peak-hour customers. Likewise for the off-peak customers.
-        The monthly usage of each customer is a number within a defined range [min, max], and it is randomly generated. It be equally allocated to each hour in the month.
-        Once the simulation starts, the program will calculate the revenue for each hour. If there is power shortage, any unsatisfied power demand will be pushed to the next hour.
-        It is possible that power outage will happen, and its possibility will increase as time goes until the incident happens.
-        If it happens, power production will stop and it will take 1-3h to be restored."""
-        print(intro)
+    Some customers spend more during peak hours while others are more interested in off peak hours, and the prices per unit are different between peak and offpeak.
+    The program assumes that the power production, the price, the number of customers would not change over the month.
+    And the ratio of Peak Usage/Total Usage is known and the same among the group of peak-hour customers. Likewise for the off-peak customers.
+    The monthly usage of each customer is a number within a defined range [min, max], and it is randomly generated. It be equally allocated to each hour in the month.
+    Once the simulation starts, the program will calculate the revenue for each hour. If there is power shortage, any unsatisfied power demand will be pushed to the next hour.
+    It is possible that power outage will happen, and its possibility will increase as time goes until the incident happens.
+    If it happens, power production will stop and it will take 1-3h to be restored."""
+        print(intro + "\n")
 
     def variable_selection(self):
         variables = vars(self)
-        print("These are the default values of the variables:\n")
+        print("These are the default values of the variables:")
         for key in variables.keys():
-            print(key)
-            for value in variables[key]:
-                print(":" + value + "\n")
+            print(key + ": " + str(variables[key]))
 
         simulation_mode = input("Do you want to proceed with the default values? (Yes/No)")
         if simulation_mode == "No":
