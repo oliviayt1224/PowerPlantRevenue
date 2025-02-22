@@ -1,12 +1,12 @@
 from functions import *
 
-df = pd.DataFrame(columns = ["Timestamp","Peak/OffPeak", "Power Balance (Hour Start)", "Power Balance (Hour End)","Power Usage","Revenue"])
-df["Timestamp"] = generate_timestamp("2025/3",30)
+if __name__ == "__main__":
+    sim = Simulation()
+    print("To use the Power Plant Revenue Simulator, here is a intro of the methodology this program uses. \n"
+          "Would you like to skip it (Yes/No)?")
+    intro_skip = input()
+    if intro_skip == "No":
+        sim.intro()
 
-power_balance_start = [initial_storage]
-power_balance_end = []
-peak_hourly_usage, offpeak_hourly_usage = calculate_hourly_usage(peak_usage_list,offfpeak_usage_list,peak_ratio,offpeak_ratio)
-
-for timestamp in df.iloc[:,0]:
-    if check_peak_or_offpeak(timestamp):
-        power_balance_end.append(peak_hourly_usage
+    sim.variable_selection()
+    sim.calculate_revenue()
