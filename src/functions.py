@@ -13,9 +13,9 @@ warnings.showwarning = lambda message, category, filename, lineno, file=None, li
 
 
 class Simulation:
-    def __init__(self, targeted_month="2025/03", power_output_per_hour=100, peak_hour_price=50, off_peak_hour_price=25, peak_customer_ratio=1,
-                 off_peak_customer_ratio=1, num_customer_peak=20, num_customer_off_peak=30, monthly_usage_min=50,
-                 monthly_usage_max=100, initial_power_storage=1000, power_outage_likelihood=0.005, power_outage_likelihood_multiplier=1.2):
+    def __init__(self, targeted_month="2025/03", power_output_per_hour=5, peak_hour_price=50, off_peak_hour_price=25, peak_customer_ratio=0.8,
+                 off_peak_customer_ratio=0.8, num_customer_peak=20, num_customer_off_peak=30, monthly_usage_min=50,
+                 monthly_usage_max=100, initial_power_storage=100, power_outage_likelihood=0.005, power_outage_likelihood_multiplier=1.05):
         self.targeted_month = targeted_month
         self.power_output_per_hour = power_output_per_hour
         self.peak_hour_price = peak_hour_price
@@ -86,9 +86,7 @@ class Simulation:
         day_index_list = day_index_list * 5
         days_in_month = calendar.monthrange(year, month)[1]  # Get how many days in the month
         day_index_list = day_index_list[:days_in_month]
-        print(day_index_list)
         num_peak_days = sum(1 for x in day_index_list if x < 5)  # Peak hours from 6am to 8pm, Mon to Fri, 14 hours in total
-        print(num_peak_days)
         peak_hours = num_peak_days * 14
         off_peak_hours = days_in_month * 24 - peak_hours
 
