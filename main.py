@@ -15,5 +15,5 @@ if __name__ == "__main__":
 
     df, total_power_usage = sim.calculate_revenue()
 
-    print("Total revenue within the month: "+sim.targeted_month+" "+str(sum(df["Revenue"])))
+    print("Total revenue within the month: "+sim.targeted_month+" "+str(round(sum(df["Revenue"]),2)))
 

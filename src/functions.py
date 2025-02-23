@@ -5,6 +5,7 @@ import datetime
 import warnings
 import numpy as np
 import sys
+import textwrap
 
 warnings.simplefilter("always")
 warnings.showwarning = lambda message, category, filename, lineno, file=None, line=None: \
@@ -30,15 +31,16 @@ class Simulation:
         self.power_outage_likelihood_multiplier = power_outage_likelihood_multiplier
 
     def intro(self):
-        intro = """The simulator calculates the monthly revenue using the basic formula of [Power_Usage x Power_Price_per_unit].
-    Some customers spend more during peak hours while others are more interested in off peak hours, and the prices per unit are different between peak and offpeak.
-    The program assumes that the power production, the price, the number of customers would not change over the month.
-    And the ratio of Peak Usage/Total Usage is known and the same among the group of peak-hour customers. Likewise for the off-peak customers.
-    The monthly usage of each customer is a number within a defined range [min, max], and it is randomly generated. It be equally allocated to each hour in the month.
-    Once the simulation starts, the program will calculate the revenue for each hour. If there is power shortage, any unsatisfied power demand will be pushed to the next hour.
-    It is possible that power outage will happen, and its possibility will increase as time goes until the incident happens.
-    If it happens, power production will stop and it will take 1-3h to be restored."""
-        print(intro + "\n")
+        print(textwrap.dedent("""
+        The simulator calculates the monthly revenue using the basic formula of [Power_Usage x Power_Price_per_unit].
+        Some customers spend more during peak hours while others are more interested in off peak hours, and the prices per unit are different between peak and offpeak.
+        The program assumes that the power production, the price, the number of customers would not change over the month.
+        And the ratio of Peak Usage/Total Usage is known and the same among the group of peak-hour customers. Likewise for the off-peak customers.
+        The monthly usage of each customer is a number within a defined range [min, max], and it is randomly generated. It be equally allocated to each hour in the month.
+        Once the simulation starts, the program will calculate the revenue for each hour. If there is power shortage, any unsatisfied power demand will be pushed to the next hour.
+        It is possible that power outage will happen, and its possibility will increase as time goes until the incident happens.
+        If it happens, power production will stop and it will take 1-3h to be restored.
+        """))
 
     def printing_out_default(self):
         variables = vars(self)
@@ -50,7 +52,7 @@ class Simulation:
         variables = vars(self)
         variable_number = None
         while variable_number != 0:
-            message = """
+            print(textwrap.dedent("""
             Please choose which variables that you want to define: 
             1.targeted_month
             2.power_output_per_hour
@@ -66,10 +68,9 @@ class Simulation:
             12.power_outage_likelihood
             13.power_outage_likelihood_multiplier
             Or enter '0' to finish definition.
-            """
-            print(message)
+            """))
             variable_number = int(input())
-            if variable_number!=0:
+            if variable_number != 0:
                 variable_value = input("Please define the value for the variable:")
                 if variable_number > 1:
                     variable_value = float(variable_value)
