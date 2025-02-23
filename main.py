@@ -9,4 +9,6 @@ if __name__ == "__main__":
         sim.intro()
 
     sim.variable_selection()
-    sim.calculate_revenue()
+    simulation_result = sim.calculate_revenue()
+    print(simulation_result)
+
