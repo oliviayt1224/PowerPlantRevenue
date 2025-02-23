@@ -10,6 +10,7 @@ warnings.simplefilter("always")
 warnings.showwarning = lambda message, category, filename, lineno, file=None, line=None: \
                         print(f"Warning: {message}", file=sys.stdout)
 
+
 class Simulation:
     def __init__(self, targeted_month="2025/03", power_output_per_hour=100, peak_hour_price=50, off_peak_hour_price=25, peak_customer_ratio=1,
                  off_peak_customer_ratio=1, num_customer_peak=20, num_customer_off_peak=30, monthly_usage_min=50,
@@ -77,16 +78,16 @@ class Simulation:
 
     def calculate_peak_and_off_peak_hours(self):
         year, month = map(int, self.targeted_month.split('/'))  # Extract year and month
-        day_index_list = [0,1,2,3,4,5,6] # 0=Monday, 6=Sunday
+        day_index_list = [0, 1, 2, 3, 4, 5, 6]  # 0=Monday, 6=Sunday
         first_day_index = calendar.monthrange(year, month)[0]  # Get weekday index
 
-        day_index_list = day_index_list if first_day_index == 0 else day_index_list[first_day_index:]+day_index_list[:first_day_index-1]
+        day_index_list = day_index_list if first_day_index == 0 else day_index_list[first_day_index:]+day_index_list[:first_day_index]
         day_index_list = day_index_list * 5
         days_in_month = calendar.monthrange(year, month)[1]  # Get how many days in the month
-        day_index_list = day_index_list[:days_in_month-1]
-
-        num_peak_days = sum(1 for x in day_index_list if x < 5) # peak hours from 6am to 8pm, Mon to Fri, 14 hours in total
-
+        day_index_list = day_index_list[:days_in_month]
+        print(day_index_list)
+        num_peak_days = sum(1 for x in day_index_list if x < 5)  # Peak hours from 6am to 8pm, Mon to Fri, 14 hours in total
+        print(num_peak_days)
         peak_hours = num_peak_days * 14
         off_peak_hours = days_in_month * 24 - peak_hours
 
@@ -194,19 +195,6 @@ class Simulation:
 
                     power_balance_end.append(new_power_balance-power_usage[i])
                     revenue.append(power_usage[i] * price)
-
-                    # diff = power_balance_end[i] - power_balance_start[i]
-                    # print("diff:" + str(diff))
-                    # print(power_balance_start[i])
-                    # print(power_balance_end[i])
-                    # print(power_usage[i])
-
-                    # if self.power_output_per_hour - diff != power_usage[i]:
-                    #     print(str(self.power_output_per_hour - diff - power_usage[i]))
-                    #     print("Wrong!!!!!!!")
-                    #     break
-
-            #print("usage:"+str(df["Timestamp"][i]) + str(power_usage[i]))
 
         df["Power Balance (Hour Start)"] = power_balance_start
         df["Power Balance (Hour End)"] = power_balance_end
