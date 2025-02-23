@@ -1,4 +1,4 @@
-from functions import *
+from src.functions import *
 
 if __name__ == "__main__":
     sim = Simulation()
@@ -8,7 +8,12 @@ if __name__ == "__main__":
     if intro_skip == "No":
         sim.intro()
 
-    sim.variable_selection()
-    simulation_result = sim.calculate_revenue()
-    print(simulation_result)
+    sim.printing_out_default()
+    simulation_mode = input("Do you want to proceed with the default values? (Yes/No)")
+    if simulation_mode == "No":
+        sim.variable_selection()
+
+    df, total_power_usage = sim.calculate_revenue()
+
+    print("Total revenue within the month: "+sim.targeted_month+" "+str(sum(df["Revenue"])))
 

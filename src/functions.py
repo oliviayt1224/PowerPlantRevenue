@@ -39,40 +39,40 @@ class Simulation:
     If it happens, power production will stop and it will take 1-3h to be restored."""
         print(intro + "\n")
 
-    def variable_selection(self):
+    def printing_out_default(self):
         variables = vars(self)
         print("These are the default values of the variables:")
         for key in variables.keys():
             print(key + ": " + str(variables[key]))
 
-        simulation_mode = input("Do you want to proceed with the default values? (Yes/No)")
-        if simulation_mode == "No":
-            variable_number = None
-            while variable_number != 0:
-                message = """
-                Please choose which variables that you want to define: 
-                1.targeted_month
-                2.power_output_per_hour
-                3.peak_hour_price
-                4.off_peak_hour_price
-                5.peak_customer_ratio
-                6.off_peak_customer_ratio
-                7.num_customer_peak
-                8.num_customer_off_peak
-                9.monthly_usage_min
-                10.monthly_usage_max
-                11.initial_power_storage"
-                12.power_outage_likelihood
-                13.power_outage_likelihood_multiplier
-                Or enter '0' to finish definition.
-                """
-                print(message)
-                variable_number = int(input())
-                if variable_number!=0:
-                    variable_value = input("Please define the value for the variable:")
-                    if variable_number > 1:
-                        variable_value = float(variable_value)
-                    setattr(self, list(variables.keys())[variable_number - 1], variable_value)
+    def variable_selection(self):
+        variables = vars(self)
+        variable_number = None
+        while variable_number != 0:
+            message = """
+            Please choose which variables that you want to define: 
+            1.targeted_month
+            2.power_output_per_hour
+            3.peak_hour_price
+            4.off_peak_hour_price
+            5.peak_customer_ratio
+            6.off_peak_customer_ratio
+            7.num_customer_peak
+            8.num_customer_off_peak
+            9.monthly_usage_min
+            10.monthly_usage_max
+            11.initial_power_storage"
+            12.power_outage_likelihood
+            13.power_outage_likelihood_multiplier
+            Or enter '0' to finish definition.
+            """
+            print(message)
+            variable_number = int(input())
+            if variable_number!=0:
+                variable_value = input("Please define the value for the variable:")
+                if variable_number > 1:
+                    variable_value = float(variable_value)
+                setattr(self, list(variables.keys())[variable_number - 1], variable_value)
         return variables
 
     def calculate_peak_and_off_peak_hours(self):
@@ -213,4 +213,4 @@ class Simulation:
         df["Revenue"] = revenue
         df["Power Usage"] = power_usage
 
-        return df
+        return df, total_power_usage
